@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,9 +26,16 @@ namespace Editor
         {
             InitializeComponent();
             Loaded += OnMainWindowLoaded;
+            Closing += OnMainWindowClosing;
         }
 
-        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        private void OnMainWindowClosing(object sender, CancelEventArgs e)
+        {
+			Closing -= OnMainWindowClosing;
+			Project.Current?.Unload();
+        }
+
+		private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
 	        Loaded -= OnMainWindowLoaded;
 	        OpenProjectBrowser();
@@ -37,13 +45,14 @@ namespace Editor
         {
 			ProjectBrowserWindow projectBrowser = new ProjectBrowserWindow();
 
-			if (projectBrowser.ShowDialog() == false)
+			if (projectBrowser.ShowDialog() == false || projectBrowser.DataContext == null)
 			{
 				Application.Current.Shutdown();
 			}
 			else
 			{
-				
+				Project.Current?.Unload();
+				DataContext = projectBrowser.DataContext;
 			}
 		}
 

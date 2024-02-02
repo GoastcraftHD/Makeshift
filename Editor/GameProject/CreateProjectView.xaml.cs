@@ -36,6 +36,8 @@ namespace Editor.GameProject
 			if (!String.IsNullOrEmpty(projectPath))
 			{
 				dialogResult = true;
+				Project project = OpenProject.Open(new ProjectData() { ProjectName = vm.ProjectName, ProjectPath = projectPath });
+				win.DataContext = project;
 			}
 
 			win.DialogResult = dialogResult;

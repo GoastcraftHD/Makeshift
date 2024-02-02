@@ -133,14 +133,12 @@ namespace Editor.GameProject
 				return String.Empty;
 			}
 
-			string path = ProjectPath;
-
-			if (path[path.Length - 1] != Path.DirectorySeparatorChar)
+			if (ProjectPath[ProjectPath.Length - 1] != Path.DirectorySeparatorChar)
 			{
-				path += @"\";
+				ProjectPath += @"\";
 			}
 
-			path += $@"{ProjectName}\";
+			string path = $@"{ProjectPath}{ProjectName}\";
 
 			try
 			{
