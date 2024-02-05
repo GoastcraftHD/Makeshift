@@ -8,12 +8,13 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using Editor.Utilities;
 
 namespace Editor.GameProject
 {
 	[DataContract(Name = "Game")]
-	class Project : ViewModelBase
+	public class Project : ViewModelBase
 	{
 		public static string Extension => ".makeshift";
 		[DataMember]
@@ -42,12 +43,32 @@ namespace Editor.GameProject
 
 		public static Project Current => Application.Current.MainWindow.DataContext as Project;
 
+		public static UndoRedo UndoRedo { get; } = new UndoRedo();
+
 		public Project(string name, string path)
 		{
 			Name = name;
 			Path = path;
 
 			OnDeserialized(new StreamingContext());
+		}
+
+		public ICommand Undo { get; private set; }
+		public ICommand Redo { get; private set; }
+
+		public ICommand AddScene { get; private set; }
+		public ICommand RemoveScene { get; private set; }
+
+		private void AddSceneInternal(string sceneName)
+		{
+			Debug.Assert(!String.IsNullOrEmpty(sceneName.Trim()));
+			_scenes.Add(new Scene(this, sceneName));
+		}
+
+		private void RemoveSceneInternal(Scene scene)
+		{
+			Debug.Assert(_scenes.Contains(scene));
+			_scenes.Remove(scene);
 		}
 
 		public static Project Load(string file)
@@ -71,6 +92,39 @@ namespace Editor.GameProject
 			}
 
 			ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
+
+			AddScene = new RelayCommand<object>(x =>
+			{
+				AddSceneInternal($"New Scene {_scenes.Count}");
+
+				Scene newScene = _scenes.Last();
+				int sceneIndex = _scenes.Count - 1;
+
+				UndoRedo.Add(new UndoRedoAction(() =>
+				{
+					RemoveSceneInternal(newScene);
+				}, () =>
+				{
+					_scenes.Insert(sceneIndex, newScene);
+				}, $"Add {newScene.Name}"));
+			});
+
+			RemoveScene = new RelayCommand<Scene>(x =>
+			{
+				int sceneIndex = _scenes.IndexOf(x);
+				RemoveSceneInternal(x);
+
+				UndoRedo.Add(new UndoRedoAction(() =>
+				{
+					_scenes.Insert(sceneIndex, x);
+				}, () =>
+				{
+					RemoveSceneInternal(x);
+				}, $"Remove {x.Name}"));
+			}, x => !x.IsActive);
+
+			Undo = new RelayCommand<object>(x => UndoRedo.Undo());
+			Redo = new RelayCommand<object>(x => UndoRedo.Redo());
 		}
 
 		public void Unload()

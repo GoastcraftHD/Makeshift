@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 namespace Editor
 {
 	[DataContract(IsReference = true)]
-	class ViewModelBase : INotifyPropertyChanged
+	public class ViewModelBase : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 
