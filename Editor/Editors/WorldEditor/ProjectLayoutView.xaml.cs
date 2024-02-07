@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Editor.Components;
 using Editor.GameProject;
+using Editor.Utilities;
 
 namespace Editor.Editors
 {
@@ -24,6 +26,38 @@ namespace Editor.Editors
 		public ProjectLayoutView()
 		{
 			InitializeComponent();
+		}
+
+		private void OnAddGameEntityBtnClick(object sender, RoutedEventArgs e)
+		{
+			Button btn = sender as Button;
+			Scene vm = btn.DataContext as Scene;
+
+			vm.AddGameEntityCommand.Execute(new GameEntity(vm) { Name = "Empty Game Entity"});
+        }
+
+		private void OnGameEntitiesListboxSelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			GameEntityView.Instance.DataContext = null;
+
+			if (e.AddedItems.Count > 0)
+			{
+				GameEntityView.Instance.DataContext =  (sender as ListBox).SelectedItems[0];
+			}
+
+			ListBox listBox = sender as ListBox;
+			List<GameEntity> newSelection = listBox.SelectedItems.Cast<GameEntity>().ToList();
+			List<GameEntity> previousSelection = newSelection.Except(e.AddedItems.Cast<GameEntity>()).Concat(e.RemovedItems.Cast<GameEntity>()).ToList();
+
+			Project.UndoRedo.Add(new UndoRedoAction(() =>
+			{
+				listBox.UnselectAll();
+				previousSelection.ForEach(x => (listBox.ItemContainerGenerator.ContainerFromItem(x) as ListBoxItem).IsSelected = true);
+			}, () =>
+			{
+				listBox.UnselectAll();
+				newSelection.ForEach(x => (listBox.ItemContainerGenerator.ContainerFromItem(x) as ListBoxItem).IsSelected = true);
+			}, "Selection changed"));
 		}
 	}
 }

@@ -22,6 +22,19 @@ namespace Editor.GameProject
 		public ProjectBrowserWindow()
 		{
 			InitializeComponent();
+			Loaded += OnProjectBrowserWindowLoaded;
+		}
+
+		private void OnProjectBrowserWindowLoaded(object sender, RoutedEventArgs e)
+		{
+			Loaded -= OnProjectBrowserWindowLoaded;
+
+			if (!OpenProject.Projects.Any())
+			{
+				OpenProjectBtn.IsEnabled = false;
+				OpenProjectView.Visibility = Visibility.Hidden;
+				OnToggleBtnClick(CreateProjectBtn, new RoutedEventArgs());
+			}
 		}
 
 		private void OnToggleBtnClick(object sender, RoutedEventArgs e)
