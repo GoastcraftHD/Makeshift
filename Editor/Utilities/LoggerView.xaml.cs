@@ -23,6 +23,40 @@ namespace Editor.Utilities
 		public LoggerView()
 		{
 			InitializeComponent();
+
+			Loaded += (s, e) =>
+			{
+				Logger.Log(MessageType.Info, "Test1");
+				Logger.Log(MessageType.Warning, "Test2");
+				Logger.Log(MessageType.Error, "Test3");
+			};
+		}
+
+		private void OnClearBtnClick(object sender, RoutedEventArgs e)
+		{
+			Logger.Clear();
+		}
+
+		private void OnMessageFilterBtnClick(object sender, RoutedEventArgs e)
+		{
+			int filter = 0x0;
+
+			if (ToggleInfo.IsChecked == true)
+			{
+				filter |= (int)MessageType.Info;
+			}
+
+			if (ToggleWarn.IsChecked == true)
+			{
+				filter |= (int)MessageType.Warning;
+			}
+
+			if (ToggleError.IsChecked == true)
+			{
+				filter |= (int)MessageType.Error;
+			}
+
+			Logger.SetMessageFilter(filter);
 		}
 	}
 }
