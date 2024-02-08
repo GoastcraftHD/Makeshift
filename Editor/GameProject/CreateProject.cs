@@ -119,8 +119,9 @@ namespace Editor.GameProject
 			}
 			catch (Exception e)
 			{
-				//TODO: Add proper logging
 				Debug.WriteLine(e.Message);
+				Logger.Log(MessageType.Error, $"Failed to read project templates");
+				throw;
 			}
 		}
 
@@ -168,9 +169,9 @@ namespace Editor.GameProject
 			}
 			catch (Exception e)
 			{
-				//TODO: Add proper logging
 				Debug.WriteLine(e.Message);
-				return String.Empty;
+				Logger.Log(MessageType.Error, $"Failed to create {ProjectName}");
+				throw;
 			}
 		}
 

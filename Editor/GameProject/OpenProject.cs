@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Shapes;
 using Editor.Utilities;
 
 namespace Editor.GameProject
@@ -56,8 +57,9 @@ namespace Editor.GameProject
 			}
 			catch (Exception e)
 			{
-				//TODO: Add proper logging
 				Debug.WriteLine(e);
+				Logger.Log(MessageType.Error, $"Failed to read project data");
+				throw;
 			}
 		}
 

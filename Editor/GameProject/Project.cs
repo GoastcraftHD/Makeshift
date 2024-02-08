@@ -82,6 +82,7 @@ namespace Editor.GameProject
 		public static void Save(Project project)
 		{
 			Serializer.ToFile(project, project.FullPath);
+			Logger.Log(MessageType.Info, $"Saved Project to {project.FullPath}");
 		}
 
 		[OnDeserialized]
@@ -133,7 +134,7 @@ namespace Editor.GameProject
 
 		public void Unload()
 		{
-
+			UndoRedo.Reset();
 		}
 	}
 }
