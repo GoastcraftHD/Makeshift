@@ -38,13 +38,6 @@ namespace Editor.Editors
 
 		private void OnGameEntitiesListboxSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			GameEntityView.Instance.DataContext = null;
-
-			if (e.AddedItems.Count > 0)
-			{
-				GameEntityView.Instance.DataContext =  (sender as ListBox).SelectedItems[0];
-			}
-
 			ListBox listBox = sender as ListBox;
 			List<GameEntity> newSelection = listBox.SelectedItems.Cast<GameEntity>().ToList();
 			List<GameEntity> previousSelection = newSelection.Except(e.AddedItems.Cast<GameEntity>()).Concat(e.RemovedItems.Cast<GameEntity>()).ToList();
@@ -58,6 +51,15 @@ namespace Editor.Editors
 				listBox.UnselectAll();
 				newSelection.ForEach(x => (listBox.ItemContainerGenerator.ContainerFromItem(x) as ListBoxItem).IsSelected = true);
 			}, "Selection changed"));
+
+			MSGameEntitiy msEntitiy = null;
+
+			if (newSelection.Any())
+			{
+				msEntitiy = new MSGameEntitiy(newSelection);
+			}
+
+			GameEntityView.Instance.DataContext = msEntitiy;
 		}
 	}
 }

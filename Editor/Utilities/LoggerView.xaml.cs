@@ -23,13 +23,6 @@ namespace Editor.Utilities
 		public LoggerView()
 		{
 			InitializeComponent();
-
-			Loaded += (s, e) =>
-			{
-				Logger.Log(MessageType.Info, "Test1");
-				Logger.Log(MessageType.Warning, "Test2");
-				Logger.Log(MessageType.Error, "Test3");
-			};
 		}
 
 		private void OnClearBtnClick(object sender, RoutedEventArgs e)
