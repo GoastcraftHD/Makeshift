@@ -1,8 +1,13 @@
 project "Engine"
 	kind "StaticLib"
+	staticruntime "on"
 	language "C++"
 	cppdialect "C++20"
-	staticruntime "on"
+	callingconvention "FastCall"
+	exceptionhandling "Off"
+	rtti "Off"
+	floatingpoint "Fast"
+	warnings "Everything"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
