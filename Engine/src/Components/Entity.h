@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ComponentsCommon.h"
+#include "EngineAPI/TransformComponent.h"
 
 namespace Makeshift
 {
@@ -14,11 +15,11 @@ namespace Makeshift
 	{
 		struct EntityInfo
 		{
-
+			Transform::InitInfo* Transform{ nullptr };
 		};
 
-		EntityId CreateGameEntity(const EntityInfo& info);
-		void RemoveGameEntity(EntityId id);
-		bool IsAlive(EntityId id);
+		Entity CreateGameEntity(const EntityInfo& info);
+		void RemoveGameEntity(Entity entity);
+		bool IsAlive(Entity entity);
 	}
 }

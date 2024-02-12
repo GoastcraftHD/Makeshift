@@ -4,8 +4,6 @@
 
 namespace Makeshift::Transform
 {
-	DEFINE_TYPED_ID(TransformId);
-
 	struct InitInfo
 	{
 		f32 Position[3]{};
@@ -13,6 +11,6 @@ namespace Makeshift::Transform
 		f32 Scale[3]{ 1.0f, 1.0f, 1.0f };
 	};
 
-	TransformId CreateTransform(const InitInfo&, GameEntity::EntityId entityId);
-	void RemoveTransform(TransformId id);
+	Component CreateTransform(const InitInfo& info, GameEntity::Entity entity);
+	void RemoveTransform(Component component);
 }
