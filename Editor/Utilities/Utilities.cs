@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace Editor.Utilities
 {
-	public static class MathUtil
+	public static class Id
+	{
+		//TODO: set data type to be the same as the id in the engine
+		public static int INVALID_ID => -1;
+		public static bool IsValid(int id) => id != INVALID_ID;
+	}
+
+	public static class Utilities
 	{
 		public static float Epsilon => 0.00001f;
 
