@@ -46,7 +46,7 @@ namespace Makeshift::GameEntity
 
 		if (!Transforms[index].IsValid())
 		{
-			return Entity{};
+			return {};
 		}
 
 		return newEntity;

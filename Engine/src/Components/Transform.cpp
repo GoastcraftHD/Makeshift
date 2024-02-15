@@ -29,7 +29,7 @@ namespace Makeshift::Transform
 			Scales.emplace_back(info.Scale);
 		}
 
-		return Component(TransformId{ (Id::IdType)Positions.size() - 1 });
+		return Component(TransformId{ entity.GetId() });
 	}
 
 	void RemoveTransform(Component component)

@@ -33,3 +33,4 @@ group ""
 
 include "Engine"
 include "Editor"
+include "EngineTest"
