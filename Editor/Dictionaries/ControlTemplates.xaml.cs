@@ -42,5 +42,31 @@ namespace Editor.Dictionaries
 				Keyboard.ClearFocus();
 			}
 		}
+
+		private void OnCloseBtnClick(object sender, RoutedEventArgs e)
+		{
+			Window window = (sender as FrameworkElement)?.TemplatedParent as Window;
+			window?.Close();
+        }
+
+		private void OnMaximizeBtnClick(object sender, RoutedEventArgs e)
+		{
+			Window window = (sender as FrameworkElement)?.TemplatedParent as Window;
+
+			if (window?.WindowState == WindowState.Normal)
+			{
+				window.WindowState = WindowState.Maximized;
+			}
+			else
+			{
+				window.WindowState = WindowState.Normal;
+			}
+		}
+
+		private void OnMinimizeBtnClick(object sender, RoutedEventArgs e)
+		{
+			Window window = (sender as FrameworkElement)?.TemplatedParent as Window;
+			window.WindowState = WindowState.Minimized;
+		}
 	}
 }

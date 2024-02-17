@@ -6,16 +6,40 @@
              xmlns:local="clr-namespace:Editor.Utilities"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <DockPanel>
-		<Border Height="32" DockPanel.Dock="Top">
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="4,0" VerticalAlignment="Center">
-				<Button Content="Clear" Margin="1,0" Click="OnClearBtnClick" Focusable="False"/>
-				<ToggleButton IsChecked="True" Content="Info" Margin="1,0" ToolTip="Toggle information messages" x:Name="ToggleInfo" Click="OnMessageFilterBtnClick"/>
-				<ToggleButton IsChecked="True" Content="Warn" Margin="1,0" ToolTip="Toggle warning messages" x:Name="ToggleWarn" Click="OnMessageFilterBtnClick"/>
-				<ToggleButton IsChecked="True" Content="Error" Margin="1,0" ToolTip="Toggle error messages" x:Name="ToggleError" Click="OnMessageFilterBtnClick"/>
-			</StackPanel>
-		</Border>
-	    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" x:Name="ScrollViewer">
+    <UserControl.Resources>
+	    <Style TargetType="{x:Type ToggleButton}">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Editor.Window.GrayBrush4}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Width" Value="18"/>
+			<EventSetter Event="Click" Handler="OnMessageFilterBtnClick"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="outerBorder" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+							<Border x:Name="innerBorder" Background="{TemplateBinding Background}" Margin="1"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+	                        <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="outerBorder" Value="{Binding Background, ElementName=innerBorder}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Opacity" TargetName="innerBorder" Value="0.5"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Opacity" TargetName="innerBorder" Value="0.2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+	    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" x:Name="ScrollViewer" Background="{DynamicResource Editor.Window.GrayBrush2}">
 		    <ItemsControl ItemsSource="{Binding Source={x:Static local:Logger.FilteredMessages}}">
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
@@ -30,7 +54,11 @@
 									<Setter Property="Background" Value="Transparent"/>
 									<Style.Triggers>
 										<Trigger Property="IsMouseOver" Value="True">
-											<Setter Property="Background" Value="Gray"/>
+											<Setter Property="Background">
+												<Setter.Value>
+													<SolidColorBrush Color="{DynamicResource Editor.Selected.BackgroundColor}" Opacity="0.5"/>
+												</Setter.Value>
+											</Setter>
 										</Trigger>
 									</Style.Triggers>
 								</Style>
@@ -50,11 +78,22 @@
 									</Style>
 								</TextBlock.Style>
 							</TextBlock>
-							<TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+							<TextBlock Text="{Binding Message}" TextWrapping="Wrap" Style="{StaticResource LightTextBlockStyle}"/>
 						</DockPanel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 	        </ItemsControl>
 		</ScrollViewer>
-	</DockPanel>
+	    <Border Height="32" VerticalAlignment="Top" Background="{DynamicResource Editor.Window.GrayBrush3}">
+			<Border.Effect>
+				<DropShadowEffect Opacity="0.3" BlurRadius="10" ShadowDepth="0"/>
+			</Border.Effect>
+		    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="4,0" VerticalAlignment="Center">
+			    <Button Content="Clear" Margin="1,0" Click="OnClearBtnClick" Focusable="False"/>
+			    <ToggleButton IsChecked="True" Content="Info" Margin="1,0" ToolTip="Toggle information messages" x:Name="ToggleInfo" Background="{DynamicResource Editor.GreenBrush}"/>
+			    <ToggleButton IsChecked="True" Content="Warn" Margin="1,0" ToolTip="Toggle warning messages" x:Name="ToggleWarn" Background="{DynamicResource Editor.OrangeBrush}"/>
+			    <ToggleButton IsChecked="True" Content="Error" Margin="1,0" ToolTip="Toggle error messages" x:Name="ToggleError" Background="{DynamicResource Editor.RedBrush}"/>
+		    </StackPanel>
+	    </Border>
+	</Grid>
 </UserControl>
