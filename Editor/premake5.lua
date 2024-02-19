@@ -17,11 +17,6 @@ project "Editor"
         "**.resx"
     }
 
-    libdirs
-	{
-		"%{wks.location}/bin/" .. outputdir .. "/EngineDLL"
-	}
-
     links
     {
         "Microsoft.Csharp",

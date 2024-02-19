@@ -43,6 +43,55 @@ namespace Editor.Dictionaries
 			}
 		}
 
+		private void OnTextBoxRenameKeyDown(object sender, KeyEventArgs e)
+		{
+			TextBox textBox = sender as TextBox;
+			BindingExpression exp = textBox.GetBindingExpression(TextBox.TextProperty);
+
+			if (exp == null)
+			{
+				return;
+			}
+
+			if (e.Key == Key.Enter)
+			{
+				if (textBox.Tag is ICommand command && command.CanExecute(textBox.Text))
+				{
+					command.Execute(textBox.Text);
+				}
+				else
+				{
+					exp.UpdateSource();
+				}
+
+				textBox.Visibility = Visibility.Collapsed;
+				e.Handled = true;
+			}
+			else if (e.Key == Key.Escape)
+			{
+				exp.UpdateTarget();
+				textBox.Visibility = Visibility.Collapsed;
+			}
+		}
+
+		private void OnTextBoxRenameLostFocus(object sender, RoutedEventArgs e)
+		{
+			TextBox textBox = sender as TextBox;
+
+			if (!textBox.IsVisible)
+			{
+				return;
+			}
+
+			BindingExpression exp = textBox.GetBindingExpression(TextBox.TextProperty);
+
+			if (exp != null)
+			{
+				exp.UpdateTarget();
+				textBox.Visibility = Visibility.Collapsed;
+			}
+		}
+
 		private void OnCloseBtnClick(object sender, RoutedEventArgs e)
 		{
 			Window window = (sender as FrameworkElement)?.TemplatedParent as Window;
