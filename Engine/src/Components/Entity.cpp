@@ -1,17 +1,19 @@
 #include "Entity.h"
 #include "Transform.h"
+#include "Script.h"
 
 namespace Makeshift::GameEntity
 {
 	namespace
 	{
 		Util::vector<Transform::Component> Transforms;
+		Util::vector<Script::Component> Scripts;
 
 		Util::vector<Id::GenerationType> Generations;
 		Util::deque<EntityId> FreeIds;
 	}
 
-	Entity CreateGameEntity(const EntityInfo& info)
+	Entity Create(const EntityInfo& info)
 	{
 		assert(info.Transform);
 		if (!info.Transform)
@@ -24,7 +26,7 @@ namespace Makeshift::GameEntity
 		if (FreeIds.size() > Id::MinDeletedElements)
 		{
 			id = FreeIds.front();
-			assert(!IsAlive(Entity{ id }));
+			assert(!IsAlive(id ));
 
 			FreeIds.pop_front();
 			id = EntityId{ Id::NewGeneration(id) };
@@ -36,42 +38,51 @@ namespace Makeshift::GameEntity
 			Generations.push_back(0);
 
 			Transforms.emplace_back();
+			Scripts.emplace_back();
 		}
 
 		const Entity newEntity{ id };
 		const Id::IdType index = Id::GetIndex(id);
 
 		assert(!Transforms[index].IsValid());
-		Transforms[index] = Transform::CreateTransform(*info.Transform, newEntity);
+		Transforms[index] = Transform::Create(*info.Transform, newEntity);
 
 		if (!Transforms[index].IsValid())
 		{
 			return {};
 		}
 
+		if (info.Script && info.Script->ScripCreator)
+		{
+			assert(!Scripts[index].IsValid());
+			Scripts[index] = Script::Create(*info.Script, newEntity);
+			assert(Scripts[index].IsValid());
+		}
+
 		return newEntity;
 	}
 
-	void RemoveGameEntity(Entity entity)
+	void Remove(EntityId id)
 	{
-		const EntityId id = entity.GetId();
 		const Id::IdType index = Id::GetIndex(id);
 
-		assert(IsAlive(entity));
+		assert(IsAlive(id));
 
-		if (IsAlive(entity))
+		if (Scripts[index].IsValid())
 		{
-			Transform::RemoveTransform(Transforms[index]);
-			Transforms[index] = Transform::Component{};
-			FreeIds.push_back(id);
+			Script::Remove(Scripts[index]);
+			Scripts[index] = {};
 		}
+
+		Transform::Remove(Transforms[index]);
+		Transforms[index] = {};
+		FreeIds.push_back(id);
 	}
 
-	bool IsAlive(Entity entity)
+	bool IsAlive(EntityId id)
 	{
-		assert(entity.IsValid());
+		assert(Id::IsValid(id));
 
-		const EntityId id = entity.GetId();
 		const Id::IdType index = Id::GetIndex(id);
 
 		assert(index < Generations.size());
@@ -82,8 +93,15 @@ namespace Makeshift::GameEntity
 
 	Transform::Component Entity::Transform() const
 	{
-		assert(IsAlive(*this));
+		assert(IsAlive(m_Id));
 		const Id::IdType index = Id::GetIndex(m_Id);
 		return Transforms[index];
+	}
+
+	Script::Component Entity::Script() const
+	{
+		assert(IsAlive(m_Id));
+		const Id::IdType index = Id::GetIndex(m_Id);
+		return Scripts[index];
 	}
 }

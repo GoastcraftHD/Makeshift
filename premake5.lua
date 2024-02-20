@@ -7,8 +7,7 @@ workspace "Makeshift"
 	configurations
 	{
 		"Debug",
-		"Release",
-		"Dist"
+		"Release"
 	}
 
 	solution_items

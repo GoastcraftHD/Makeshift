@@ -10,7 +10,7 @@ namespace Makeshift::Transform
 		Util::vector<Math::V3> Scales;
 	}
 
-	Component CreateTransform(const InitInfo& info, GameEntity::Entity entity)
+	Component Create(InitInfo info, GameEntity::Entity entity)
 	{
 		assert(entity.IsValid());
 		const Id::IdType entityIndex = Id::GetIndex(entity.GetId());
@@ -32,7 +32,7 @@ namespace Makeshift::Transform
 		return Component(TransformId{ entity.GetId() });
 	}
 
-	void RemoveTransform(Component component)
+	void Remove(Component component)
 	{
 		assert(component.IsValid());
 	}

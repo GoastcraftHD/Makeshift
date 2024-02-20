@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Editor.GameProject;
+using Path = System.IO.Path;
 
 namespace Editor
 {
@@ -22,7 +24,10 @@ namespace Editor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+		//TODO: set when installing engine
+		public static string MakeshiftPath { get; private set; } = @"C:\dev\VisualStudio\Makeshift";
+
+		public MainWindow()
         {
             InitializeComponent();
             Loaded += OnMainWindowLoaded;
@@ -38,10 +43,34 @@ namespace Editor
 		private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
 	        Loaded -= OnMainWindowLoaded;
+	        GetEnginePath();
 	        OpenProjectBrowser();
         }
 
-        private void OpenProjectBrowser()
+		private void GetEnginePath()
+		{
+			string enginePath = Environment.GetEnvironmentVariable("MAKESHIFT_ENGINE_PATH", EnvironmentVariableTarget.User);
+
+			if (enginePath == null || !Directory.Exists(Path.Combine(enginePath, @"Engine\src\EngineAPI")))
+			{
+				EnginePathDialog dlg = new EnginePathDialog();
+				if (dlg.ShowDialog() == true)
+				{
+					MakeshiftPath = dlg.MakeshiftPath;
+					Environment.SetEnvironmentVariable("MAKESHIFT_ENGINE_PATH", MakeshiftPath, EnvironmentVariableTarget.User);
+				}
+				else
+				{
+					Application.Current.Shutdown();
+				}
+			}
+			else
+			{
+				MakeshiftPath = enginePath;
+			}
+		}
+
+		private void OpenProjectBrowser()
         {
 			ProjectBrowserWindow projectBrowser = new ProjectBrowserWindow();
 

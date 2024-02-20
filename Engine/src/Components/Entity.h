@@ -8,6 +8,7 @@ namespace Makeshift
 #define INIT_INFO(component) namespace component { struct InitInfo; }
 
 	INIT_INFO(Transform);
+	INIT_INFO(Script)
 
 #undef INIT_INFO
 
@@ -16,10 +17,11 @@ namespace Makeshift
 		struct EntityInfo
 		{
 			Transform::InitInfo* Transform{ nullptr };
+			Script::InitInfo* Script{ nullptr };
 		};
 
-		Entity CreateGameEntity(const EntityInfo& info);
-		void RemoveGameEntity(Entity entity);
-		bool IsAlive(Entity entity);
+		Entity Create(const EntityInfo& info);
+		void Remove(EntityId id);
+		bool IsAlive(EntityId id);
 	}
 }

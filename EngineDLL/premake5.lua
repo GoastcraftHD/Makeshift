@@ -3,7 +3,6 @@ project "EngineDLL"
 	staticruntime "on"
 	language "C++"
 	cppdialect "C++20"
-	callingconvention "FastCall"
 	exceptionhandling "Off"
 	rtti "Off"
 	floatingpoint "Fast"
@@ -44,19 +43,15 @@ project "EngineDLL"
 
 		defines
 		{
+			"MKS_WINDOWS"
 		}
 
 	filter "configurations:Debug"
-		defines "MST_DEBUG"
+		defines "MKS_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "MST_RELEASE"
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Dist"
-		defines "MST_DIST"
+		defines "MKS_RELEASE"
 		runtime "Release"
 		optimize "on"

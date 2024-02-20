@@ -56,10 +56,10 @@ private:
 		{
 			m_Added++;
 
-			GameEntity::Entity entity = GameEntity::CreateGameEntity(entityInfo);
+			GameEntity::Entity entity = GameEntity::Create(entityInfo);
 			assert(entity.IsValid());
 			m_Entities.push_back(entity);
-			assert(GameEntity::IsAlive(entity));
+			assert(GameEntity::IsAlive(entity.GetId()));
 
 			count--;
 		}
@@ -82,9 +82,9 @@ private:
 
 			if (entity.IsValid())
 			{
-				GameEntity::RemoveGameEntity(entity);
+				GameEntity::Remove(entity.GetId());
 				m_Entities.erase(m_Entities.begin() + index);
-				assert(!GameEntity::IsAlive(entity));
+				assert(!GameEntity::IsAlive(entity.GetId()));
 				m_Removed++;
 			}
 

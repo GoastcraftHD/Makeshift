@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Editor.GameDev;
 using Editor.GameProject;
 
 namespace Editor.Editors
@@ -33,5 +34,10 @@ namespace Editor.Editors
 			Loaded -= OnWorldEditorViewLoaded;
 			Focus();
 		}
-	}
+
+		private void OnNewScriptBtnClick(object sender, RoutedEventArgs e)
+		{
+			new NewScriptDialog().ShowDialog();
+		}
+    }
 }

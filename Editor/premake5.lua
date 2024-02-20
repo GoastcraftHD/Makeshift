@@ -32,5 +32,23 @@ project "Editor"
         "System.Runtime.Serialization",
         "System.Numerics",
         "WindowsBase.dll",
+        "%{wks.location}/vendor/microsoft/Interop.EnvDTE.dll",
+        "%{wks.location}/vendor/microsoft/Interop.EnvDTE80.dll",
         "EngineDLL"
     }
+
+
+
+    filter "configurations:Debug"
+		defines
+        {
+            "MKS_DEBUG",
+            "DEBUG"
+        }
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "MKS_RELEASE"
+		runtime "Release"
+		optimize "on"

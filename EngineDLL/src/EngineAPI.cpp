@@ -52,11 +52,11 @@ EDITOR_INTERFACE Id::IdType CreateGameEntity(GameEntityDescriptor* descriptor)
 	Transform::InitInfo transformInfo = desc.transform.ToInitInfo();
 	GameEntity::EntityInfo entityInfo{ &transformInfo };
 
-	return GameEntity::CreateGameEntity(entityInfo).GetId();
+	return GameEntity::Create(entityInfo).GetId();
 }
 
 EDITOR_INTERFACE void RemoveGameEntity(Id::IdType id)
 {
 	assert(Id::IsValid(id));
-	GameEntity::RemoveGameEntity(EntityFromId(id));
+	GameEntity::Remove(GameEntity::EntityId{ id });
 }
